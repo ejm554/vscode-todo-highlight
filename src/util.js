@@ -220,12 +220,26 @@ function showOutputChannel(data) {
 
     const settings = workspace.getConfiguration('todohighlight');
     const toggleURI = settings.get('toggleURI', false);
+    const showShortFilePaths = settings.get('showShortFilePaths', false);
     const platform = os.platform();
 
     data.forEach(function (v, i) {
+        // Get just the filename from the full path
+        const uriString = v.uri;
+        let displayPath = uriString;
+        
+        if (showShortFilePaths) {
+            // Extract just the filename from the URI
+            const fileNameMatch = uriString.match(/([^\/]+)(?=[^\/#]*$)/);
+            if (fileNameMatch && fileNameMatch[1]) {
+                // We'll show only the filename but keep the full URI for the clickable link
+                displayPath = 'file: ' + fileNameMatch[1];
+            }
+        }
+        
         // due to an issue of vscode(https://github.com/Microsoft/vscode/issues/586), in order to make file path clickable within the output channel,the file path differs from platform
-        const patternA = '#' + (i + 1) + '\t' + v.uri + '#' + (v.lineNum + 1);
-        const patternB = '#' + (i + 1) + '\t' + v.uri + ':' + (v.lineNum + 1) + ':' + (v.startCol + 1);
+        const patternA = '#' + (i + 1) + '\t' + (showShortFilePaths ? displayPath : uriString) + '#' + (v.lineNum + 1);
+        const patternB = '#' + (i + 1) + '\t' + (showShortFilePaths ? displayPath : uriString) + ':' + (v.lineNum + 1) + ':' + (v.startCol + 1);
         const patterns = [patternA, patternB];
 
         //for windows

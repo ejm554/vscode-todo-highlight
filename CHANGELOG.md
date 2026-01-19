@@ -1,6 +1,9 @@
 # Change Log
 To update to the latest version, please use VSCode's own Extensions user interface.
 
+## Unreleased - Fork
+- added new `todohighlight.showShortFilePaths` setting to display only filenames (instead of full paths) in the output channel while keeping links clickable
+
 ## 2.0.8 - 2023-04-12
 - an interim release that bundles up existing merged PRs, mostly from security updates in dependencies. Including
   - Include and exclude options (issue #42, thanks to PR #66 by @yuriykis)

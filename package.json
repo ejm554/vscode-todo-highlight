@@ -9,7 +9,7 @@
 		"keyword",
 		"annotation"
 	],
-	"version": "2.0.9",
+	"version": "2.0.9-fork.1",
 	"publisher": "jgclark",
 	"license": "MIT",
 	"icon": "assets/icon.png",
@@ -103,6 +103,11 @@
 					"type": "boolean",
 					"default": false,
 					"description": "If the file path within the output channel is not clickable, set this to true to toggle the path patten between `<path>#<line>` and `<path>:<line>:<column>`"
+				},
+				"todohighlight.showShortFilePaths": {
+					"type": "boolean",
+					"default": false,
+					"description": "When enabled, shows only the filename instead of the full path in the output channel while keeping links clickable"
 				},
 				"todohighlight.keywords": {
 					"type": "array",
