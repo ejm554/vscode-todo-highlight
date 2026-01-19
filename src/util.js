@@ -226,20 +226,29 @@ function showOutputChannel(data) {
     data.forEach(function (v, i) {
         // Get just the filename from the full path
         const uriString = v.uri;
-        let displayPath = uriString;
+        
+        // due to an issue of vscode(https://github.com/Microsoft/vscode/issues/586), in order to make file path clickable within the output channel,the file path differs from platform
+        let patternA, patternB;
         
         if (showShortFilePaths) {
             // Extract just the filename from the URI
             const fileNameMatch = uriString.match(/([^\/]+)(?=[^\/#]*$)/);
             if (fileNameMatch && fileNameMatch[1]) {
-                // We'll show only the filename but keep the full URI for the clickable link
-                displayPath = 'file: ' + fileNameMatch[1];
+                const fileName = fileNameMatch[1];
+                // Create the patterns with the full URI (for clickability) but display a shortened version
+                // We need to keep the URI format intact for VS Code to recognize it as a link
+                patternA = '#' + (i + 1) + '\t' + uriString + '#' + (v.lineNum + 1) + ' [' + fileName + ']';
+                patternB = '#' + (i + 1) + '\t' + uriString + ':' + (v.lineNum + 1) + ':' + (v.startCol + 1) + ' [' + fileName + ']';
+            } else {
+                // Fallback if no filename could be extracted
+                patternA = '#' + (i + 1) + '\t' + uriString + '#' + (v.lineNum + 1);
+                patternB = '#' + (i + 1) + '\t' + uriString + ':' + (v.lineNum + 1) + ':' + (v.startCol + 1);
             }
+        } else {
+            // Original behavior
+            patternA = '#' + (i + 1) + '\t' + uriString + '#' + (v.lineNum + 1);
+            patternB = '#' + (i + 1) + '\t' + uriString + ':' + (v.lineNum + 1) + ':' + (v.startCol + 1);
         }
-        
-        // due to an issue of vscode(https://github.com/Microsoft/vscode/issues/586), in order to make file path clickable within the output channel,the file path differs from platform
-        const patternA = '#' + (i + 1) + '\t' + (showShortFilePaths ? displayPath : uriString) + '#' + (v.lineNum + 1);
-        const patternB = '#' + (i + 1) + '\t' + (showShortFilePaths ? displayPath : uriString) + ':' + (v.lineNum + 1) + ':' + (v.startCol + 1);
         const patterns = [patternA, patternB];
 
         //for windows
